@@ -47,8 +47,8 @@ describe('/users', function() {
             .expect('Content-Type', /json/);
         const createdUser: User = response.body;
 
-        expect(createdUser.name).toBe(user.name);
-        expect(createdUser.email).toBe(user.email);
+        expect(createdUser.name).toBe(user.name.toLowerCase());
+        expect(createdUser.email).toBe(user.email.toLowerCase());
         expect(createdUser.createdAt).not.toBeNull();
         expect(createdUser.updatedAt).not.toBeNull();
         expect(createdUser.id).not.toBeNull();

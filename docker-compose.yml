@@ -1,0 +1,10 @@
+
+services:
+  db:
+    image: postgres:12-alpine
+    environment:
+      POSTGRES_USER: userService         # Define the username
+      POSTGRES_PASSWORD: secret # Define the password
+      POSTGRES_DB: user_service  # Define the initial
+    ports:
+      - "5432:5432"

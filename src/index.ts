@@ -1,22 +1,21 @@
-import express, {Express, Request, Response} from 'express';
-import * as dotenv from 'dotenv';
-import cors from 'cors';
+import { app, initializeDependencies } from './app';
 
-dotenv.config();
 
-const app: Express = express();
-app.use(cors())
-  .use(express.json())
-  .options('*', cors());
+initializeDependencies(app).then((server) => {
+// Start the server if this file is run directly
+    if (require.main === module) {
+        const port = process.env.PORT || 3111;
 
-app.post('/users', (req: Request, res: Response) => {
-  res.send({}).status(201);
+        server.listen(port, () => {
+            console.log(`[server]: Server is running at http://localhost:${port}`);
+        });
+    }
+}).catch((err) => {
+    console.error('Failed to start Application server with error: ', err);
+}).finally(() => {
+    //Cleanup
 });
-app.get('/users', (req: Request, res: Response) => {
-  res.send([]).status(200);
-});
 
-const port = process.env.PORT || 3111;
-app.listen(port, () => {
-  console.log(`[server]: Server is running at http://localhost:${port}`);
-});
+
+
+

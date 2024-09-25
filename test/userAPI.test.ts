@@ -53,7 +53,7 @@ describe('/users', function() {
         expect(createdUser.updatedAt).not.toBeNull();
         expect(createdUser.id).not.toBeNull();
 
-    }, 10000);
+    });
 
     test('should fails to create a user if payload is in-valid', async function() {
         const user = {
@@ -74,7 +74,7 @@ describe('/users', function() {
         expect(validationErrors.errors[0]).toBe('Name is required');
         expect(validationErrors.errors[1]).toBe('Please enter a valid email');
 
-    }, 10000);
+    });
 
     test('should fetch all existing users sorted in ASC order by their creation date', async function() {
 
@@ -126,6 +126,7 @@ describe('/users', function() {
                 new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
             );
         expect(actualUsers).toEqual(sortedInAscOrder);
-    }, 100000);
+    }
+    );
 
 });

@@ -1,17 +1,19 @@
-import express, { Express } from 'express';
+import express, { Express, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import { createUserRouter } from './routes/userRouter';
 import { SequelizeConnectionFactory } from './database/SequelizeConnectionFactory';
 import { UserModel } from './database/models/UserModel';
 import { UserService } from './services/userService';
 import { UserController } from './routes/controllers/userController';
+import { logger } from './common';
 
 const app: Express = express();
 
-// Middleware setup
+// TODO:some restrictions here would be needed
 app.use(cors())
     .use(express.json())
     .options('*', cors());
+
 
 /**
  * Initialization & Dependency Injection
@@ -23,9 +25,9 @@ async function runMigrations() {
     if (process.env.NODE_ENV === 'test') {
         try {
             await sequelize.sync({ force: true });
-            console.log('Database synchronized (test environment)');
+            logger.debug('Database synchronized (test environment)');
         } catch (err) {
-            console.error('Failed to synchronize database:', err);
+            logger.debug('Failed to synchronize database:', err);
         }
     }
 }
@@ -39,6 +41,14 @@ async function initializeDependencies(app: Express): Promise<Express> {
     // Setup routes
     const userRouter = createUserRouter(userController);
     app.use('/users', userRouter);
+
+    app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+        //TODO:Add  a better error handling especially for sequelize related errors
+        logger.error(err.stack);
+        res.status(500).send({
+            message: 'Something broke!',
+        });
+    });
     return app;
 }
 
